@@ -50,7 +50,13 @@ function getPointGen() {
 function addedPlayerData() { return {
 	weather: "Yes",
 	happiness: new Decimal(72),
+	energy: 50,
 }}
+
+// Demo energy regen for showing the energy-bar
+function update(delta) {
+	if (player.energy < 100) player.energy = Math.min(100, player.energy + delta * 5)
+}
 
 // Display extra things at the top of the page
 var displayThings = [

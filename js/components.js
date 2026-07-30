@@ -464,6 +464,45 @@ function loadVue() {
 		`
 	})
 
+	// Simple energy bar component
+	Vue.component('energy-bar', {
+		props: ['layer', 'data'],
+		computed: {
+			_val() {
+				if (!this.data) return 0
+				if (typeof this.data === 'number') return this.data
+				if (this.data.value !== undefined) return this.data.value
+				return 0
+			},
+			_max() {
+				if (!this.data) return 1
+				if (typeof this.data === 'object' && this.data.max !== undefined) return this.data.max
+				return 1
+			},
+			dims() {
+				let w = (this.data && this.data.width) ? this.data.width : '200px'
+				let h = (this.data && this.data.height) ? this.data.height : '18px'
+				return {width: w, height: h}
+			},
+			fillStyle() {
+				let val = Number(this._val) || 0
+				let max = Number(this._max) || 1
+				let pct = max > 0 ? Math.max(0, Math.min(1, val / max)) : 0
+				let color = (this.data && this.data.color) ? this.data.color : (tmp && tmp[this.layer] ? tmp[this.layer].color : '#00aaff')
+				return {'width': (pct * 100) + '%', 'height': this.dims.height, 'background-color': color}
+			}
+		},
+		template: `
+		<div style="position: relative; display: inline-block;" v-bind:style="{width: dims.width, height: dims.height}">
+			<div class="barBorder barBase" v-bind:style="{width: dims.width, height: dims.height}"></div>
+			<div class="fill" v-bind:style="fillStyle"></div>
+			<div class="overlayTextContainer" v-bind:style="{width: dims.width, height: dims.height}">
+				<span class="overlayText">{{ format(_val) + '/' + format(_max) }}</span>
+			</div>
+		</div>
+		`
+	})
+
 
 	Vue.component('achievements', {
 		props: ['layer', 'data'],

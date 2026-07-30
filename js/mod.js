@@ -1,6 +1,6 @@
 let modInfo = {
-	name: "The ??? Tree",
-	author: "nobody",
+	name: "进制树",
+	author: "大观园",
 	pointsName: "points",
 	modFiles: ["layers.js", "tree.js"],
 
@@ -12,7 +12,7 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
+	num: "text",
 	name: "Literally nothing",
 }
 
