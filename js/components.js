@@ -37,7 +37,7 @@ function loadVue() {
 		`
 	})
 		
-	// data = an array of Components to be displayed in a row
+	// data = 一排要显示的组件数组
 	Vue.component('row', {
 		props: ['layer', 'data'],
 		computed: {
@@ -56,7 +56,7 @@ function loadVue() {
 		`
 	})
 
-	// data = an array of Components to be displayed in a column
+	// data = 要在一列中显示的组件数组
 	Vue.component('column', {
 		props: ['layer', 'data'],
 		computed: {

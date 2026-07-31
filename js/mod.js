@@ -1,19 +1,19 @@
 let modInfo = {
-	name: "进制树",
+	name: "The Coke Tree",
 	author: "大观园",
-	pointsName: "points",
+	pointsName: "mL",
 	modFiles: ["layers.js", "tree.js"],
 
 	discordName: "",
 	discordLink: "",
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
-	offlineLimit: 1,  // In hours
+	initialStartPoints: new Decimal (0), // 用于硬重置和新玩家
+	offlineLimit: 0,  // 离线时间
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "text",
-	name: "Literally nothing",
+	num: "0.1",
+	name: "更新了可乐阶层",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
@@ -21,39 +21,39 @@ let changelog = `<h1>Changelog:</h1><br>
 		- Added things.<br>
 		- Added stuff.`
 
-let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
+let winText = `恭喜！你已经到达终点并通关了这个游戏，但暂时...`
 
-// If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
-// (The ones here are examples, all official functions are already taken care of)
+// 如果你在某个层里添加了新功能，而且这些功能在被调用时会产生效果，就把它们加到这里。
+// (这里的只是例子，所有官方职能都已经处理好了)
 var doNotCallTheseFunctionsEveryTick = ["blowUpEverything"]
 
 function getStartPoints(){
     return new Decimal(modInfo.initialStartPoints)
 }
 
-// Determines if it should show points/sec
+// 确定是否显示每秒点数
 function canGenPoints(){
 	return true
 }
 
-// Calculate points/sec!
+// 计算每秒点数
 function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
-	let gain = new Decimal(1)
+	let gain = new Decimal(0)
 	return gain
 }
 
-// You can add non-layer related variables that should to into "player" and be saved here, along with default values
+// 你可以添加非图层相关的变量，这些变量应该放到“player”里并保存在这里，同时可以设置默认值
 function addedPlayerData() { return {
 }}
 
-// Display extra things at the top of the page
+// 在页面顶部显示额外的东西
 var displayThings = [
 ]
 
-// Determines when the game "ends"
+// 确定游戏何时“结束”
 function isEndgame() {
 	return player.points.gte(new Decimal("e280000000"))
 }
@@ -67,9 +67,9 @@ var backgroundStyle = {
 
 }
 
-// You can change this if you have things that can be messed up by long tick lengths
+// 如果你有东西会被长计时长度搞乱的话，你可以更改这个
 function maxTickLength() {
-	return(3600) // Default is 1 hour which is just arbitrarily large
+	return(3600) // 默认是 1 小时，这只是随便设的大数
 }
 
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
