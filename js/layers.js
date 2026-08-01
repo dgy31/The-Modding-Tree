@@ -14,60 +14,49 @@ function doClick() {
 addLayer("c1", { 
     name: "Cola", // 这是可选的，只在少数地方使用，如果没有就直接用图层 ID。
     symbol: "Cola", // 这会出现在图层的节点上。默认是首字母大写的 ID
-    position: 0, // 行内的水平位置。默认情况下，它使用图层 ID 并按字母顺序排序
+    position: 0,// 行内的水平位置。默认情况下，它使用图层 ID 并按字母顺序排序
+    row: 0,
+    displayRow: 0, 
+    color: "#3f2500",
+    layerShown(){return true},
+
     startData() { return {
         unlocked: true,
 		points: new Decimal(0),
     }},
-    color: "#3f2500",
+    
     tabFormat: {
         "可乐": {
             content: [
-                "requires",
                 "main-display",
+                ["display-text", () => `你有 ${format(player.points)} mL 可乐`],
+                ["display-text", () => `你有 ${format(player.c1.points)} 金币`],
                 "blank",
-                "clickables",
                 "buyables",
                 "blank",
                 "upgrades",
-                "blank",
-                
             ]
         },
         "金币": {
-            color: "#FFD700",
             content: [
-                ["display-text", () => {
-                    return `你有 ${format(player.c1.points)} 金币`
-                }],
+                ["display-text", () => `你有 ${format(player.c1.points)} 金币`],
                 ["display-text", () => `点击获取 +${format(getClickGain())} 金币`],
                 "blank",
                 "clickables",
+            ]
+        },
+        "里程碑": {
+            content: [
+                ["display-text", () => `你有 ${format(player.points)} mL 可乐`],
+                ["display-text", () => `你有 ${format(player.c1.points)} 金币`],
                 "blank",
-                "upgrades",
-                "blank",
+                "milestones",
             ]
         }
     },
 
-    requires: new Decimal(10), // 可以是一个考虑需求增加的函数
-    resource: "coins", // 声望货币的名称
-    baseResource: "mL", // 资源声望的名称是基于
-    baseAmount() {return player.points}, // 获取当前的 baseResource 数量
-    type: "normal", // 普通：获取货币的成本取决于获得的数量。固定：成本取决于你已经拥有多少。
-    exponent: 0.5, // 声望货币指数
-    gainMult() { // 计算主货币的奖金倍数
-        mult = new Decimal(1)
-        return mult
-    },
-    gainExp() { // 从奖金计算主要货币的指数
-        return new Decimal(1)
-    },
-    row: 0, // 层所在的行（0 是第一行）
-    hotkeys: [
-        {key: "m", description: "M: Reset for Coins", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
-    ],
-    layerShown(){return true},
+    //hotkeys: [{key: "m", description: "M: Reset for Coins", onPress(){if (canReset(this.layer)) doReset(this.layer)}},],
+    
     clickables: {
         11: {
             title: "赚取金币",
@@ -93,6 +82,7 @@ addLayer("c1", {
             let cost = this.cost(getBuyableAmount(this.layer, this.id))
             let gain = new Decimal(300)
             if (hasUpgrade("c1", 12)) gain = gain.add(200)
+            if (hasUpgrade("c1", 14)) gain = gain.add(500)
             return `花费 ${format(cost)} 金币<br>当前一次购买可获得 ${format(gain)} mL`
         },
         canAfford() { return player[this.layer].points.gte(this.cost(getBuyableAmount(this.layer, this.id))) },
@@ -104,6 +94,14 @@ addLayer("c1", {
             setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
         }
     }},
+
+    milestones: {
+        11: {
+            requirementDescription: "拥有1000mL可乐",
+            effectDescription: "解锁Cola Concentrate",
+            done() { return player.points.gte(1000) }
+        }
+    },
     
     upgrades: {
         11: {
@@ -119,7 +117,7 @@ addLayer("c1", {
         },
         12: {
             title: "喝1L可乐",
-            description: "你不再满足于300mL的Cola,购买可乐改为获取500mL",
+            description: "你不再满足于300mL的Cola,可乐获取量增加200mL",
             cost: new Decimal(1000),
             currencyDisplayName: "mL",
             currencyInternalName: "points",
@@ -128,16 +126,22 @@ addLayer("c1", {
         },
         13: {
             title: "喝2.5L可乐",
-            description: "你开始寻找批发商乐，可乐价格上涨乘数降低为1.2",
+            description: "你开始寻找批发商,可乐价格上涨乘数降低为1.2",
             cost: new Decimal(5000),
             currencyDisplayName: "mL",
             currencyInternalName: "points",
             effect() { return new Decimal(1.2) ;},
             unlocked() { return hasUpgrade("c1", 12); }
-        }
+        },
         14: {
             title: "喝5L可乐",
-
+            description: "更大的可乐包装，可乐获取量增加500mL",
+            cost: new Decimal(5000),
+            currencyDisplayName: "mL",
+            currencyInternalName: "points",
+            effect() { return new Decimal(500) ;},
+            unlocked() { return hasUpgrade("c1", 13); }
+        }
     }     
 })
 
